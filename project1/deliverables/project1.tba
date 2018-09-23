@@ -1,0 +1,54 @@
+; Marc Dominic Cabote
+; cecs 460  Spring 2018
+; TramelBlaze Assembly Program 
+
+ZEROS 		EQU	0000
+ONE			EQU 0001
+COUNTER		EQU R9
+ANYADRS		EQU 0460
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; declare constants for coding
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; begin executable
+
+START		ENINT
+
+			LOAD COUNTER, ZEROS
+			LOAD R0, ZEROS
+			
+; main loop incrementing R0
+			
+FIRST		ADD R0, ONE
+			JUMP FIRST
+
+; address for the interrupt service routine
+			
+			ADDRESS 0300
+
+; setup loop in the isr
+			
+ISR
+			INPUT RA, ANYADRS
+			AND RA, 0001
+			JUMPZ DECREMENT
+			ADD R9, ONE
+			OUTPUT R9, 0001
+			RETEN
+			
+DECREMENT	SUB R9, ONE
+			OUTPUT R9, 0001
+			RETEN
+			
+; isr vectored through 0FFE
+			
+			ADDRESS 0FFE
+ENDIT		JUMP ISR
+			END
+~
+~
+~
+~
+~
